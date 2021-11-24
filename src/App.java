@@ -24,6 +24,6 @@ public class App {
         //Generación de labels
         // interfaz.generarLabel("Es un bingo", 80, 20);
         // interfaz.generarLabel("Otro bingo", 80, 40);
-        System.out.println(Bingo.generacionLetras(1, 15));
+        System.out.println(Bingo.creacionBingo());
     }
 }
