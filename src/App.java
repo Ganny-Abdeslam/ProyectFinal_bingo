@@ -7,7 +7,7 @@ import Interfaz.Interfaz;
 * <b>Note:</b> Giving proper comments in your program makes it more
 * user friendly and it is assumed as a high quality code.
 *
-* @author  Gasser Abdeslam Abdelgelil Serna ---- Santiago Marin Dussan
+* @author  Gasser Abdeslam Abdelgelil Serna & Santiago Marin Dussan
 * @version 1.0
 * @since   2021
 */
