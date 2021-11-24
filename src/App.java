@@ -13,6 +13,7 @@ import Bingo.Bingo;
 * @since   2021
 */
 
+//Algo nuevo
 public class App {
 
     //EL TAMAÑO DE LA INTERFAZ
