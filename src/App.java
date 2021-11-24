@@ -1,4 +1,5 @@
 import Interfaz.Interfaz;
+import Bingo.Bingo;
 
 /**
 * <h1>Un bingo con interfaz gráfica</h1>
@@ -21,7 +22,8 @@ public class App {
     public static Interfaz interfaz = new Interfaz(ANCHO, ALTO); //Definir un objeto tipo Interfaz (swing)
     public static void main(String[] args) throws Exception {
         //Generación de labels
-        interfaz.generarLabel("Es un bingo", 80, 20);
-        interfaz.generarLabel("Otro bingo", 80, 40);
+        // interfaz.generarLabel("Es un bingo", 80, 20);
+        // interfaz.generarLabel("Otro bingo", 80, 40);
+        System.out.println(Bingo.generacionLetras(1, 15));
     }
 }
