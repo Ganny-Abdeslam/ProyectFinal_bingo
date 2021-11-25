@@ -1,11 +1,13 @@
 package Interfaz;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class Interfaz extends JFrame implements ActionListener{
     
     private JButton button_close;
     private JButton button_compra;
+    private ArrayList<ArrayList<JLabel>> arraysLabel = new ArrayList<>();
 
     /**
      * Constructor
@@ -26,6 +28,9 @@ public class Interfaz extends JFrame implements ActionListener{
 
         //Boton de compra
         button_compra = crearButton("Comprar Boleto", 50, 550, 150, 30);
+
+        //Añadir un Array de Labels
+        addLabelArray();
     }
 
     /**
@@ -39,6 +44,37 @@ public class Interfaz extends JFrame implements ActionListener{
         label.setBounds(x, y, 300, 30);
         add(label);
     }
+
+    //
+    //GENERACIÓN LABELS ARRAY 2D & 3D
+    //
+    public void addLabelArray(){
+        for(int i=0; i<5; i++){
+            arraysLabel.add(addLabelArrayVector("",80+i*20));
+            for(int j=0; j<5; j++){
+                add(arraysLabel.get(i).get(j));
+            }
+        }
+    }
+
+    public ArrayList<JLabel> addLabelArrayVector(String mensja, int x){
+        ArrayList<JLabel> arraysLabelVector = new ArrayList<>();
+
+        for(int j=0; j<5; j++){
+            JLabel label = new JLabel(mensja);
+            label.setBounds(x, 20+j*20, 300, 30);
+            arraysLabelVector.add(label);
+        }
+
+        return arraysLabelVector;
+    }
+
+    public void modificarLabelArray(String msj, int i, int j){
+        arraysLabel.get(i).get(j).setText(msj);
+    }
+    //
+    //
+    //
 
     /**
      * Generación de un boton
