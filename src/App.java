@@ -13,7 +13,7 @@ import Bingo.Bingo;
 * @since   2021
 */
 
-//Algo nuevo
+//Payaso ama a febe
 public class App {
 
     //EL TAMAÑO DE LA INTERFAZ
