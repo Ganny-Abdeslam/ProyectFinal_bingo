@@ -2,13 +2,25 @@ package Interfaz;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Random;
+
+import Bingo.Bingo;
 
 public class Interfaz extends JFrame implements ActionListener{
     
     private JButton button_close;
     private JButton button_compra;
+    private JButton button_generar_numero;
+
+    private ArrayList<String> bolas = new ArrayList<>();
+    private ArrayList<String> bolasComparacion = new ArrayList<>();
+    public ArrayList<ArrayList<ArrayList<String>>> bingo = new ArrayList<>();
+    public ArrayList<ArrayList<String>> bingoAux = new ArrayList<>();
     private ArrayList<ArrayList<JLabel>> arraysLabel = new ArrayList<>();
 
+    private int countI = 0;
+    private int countJ = 0;
+    
     /**
      * Constructor
      * @param ancho el ancho de la ventana
@@ -29,8 +41,23 @@ public class Interfaz extends JFrame implements ActionListener{
         //Boton de compra
         button_compra = crearButton("Comprar Boleto", 50, 550, 150, 30);
 
+        //Boton para sacar una bola
+        button_generar_numero = crearButton("Sacar Bola", 280, 550, 150, 30);
+
         //Añadir un Array de Labels
         addLabelArray();
+
+        //Generar vector d Bolas
+        generarBolas();
+
+        //Generacion de Bolas que sacan
+        bolasComparacion.add(".es");
+
+        //Generación de los 70 Bingos
+        bingo = Bingo.creacionBingo();
+
+        //Bingo Auxiliar para identificar ganadores
+        bingoAux = Bingo.convertirAVector(bingo);
     }
 
     /**
@@ -49,9 +76,9 @@ public class Interfaz extends JFrame implements ActionListener{
     //GENERACIÓN LABELS ARRAY 2D & 3D
     //
     public void addLabelArray(){
-        for(int i=0; i<5; i++){
+        for(int i=0; i<9; i++){
             arraysLabel.add(addLabelArrayVector("",80+i*20));
-            for(int j=0; j<5; j++){
+            for(int j=0; j<9; j++){
                 add(arraysLabel.get(i).get(j));
             }
         }
@@ -60,7 +87,7 @@ public class Interfaz extends JFrame implements ActionListener{
     public ArrayList<JLabel> addLabelArrayVector(String mensja, int x){
         ArrayList<JLabel> arraysLabelVector = new ArrayList<>();
 
-        for(int j=0; j<5; j++){
+        for(int j=0; j<9; j++){
             JLabel label = new JLabel(mensja);
             label.setBounds(x, 20+j*20, 300, 30);
             arraysLabelVector.add(label);
@@ -72,6 +99,11 @@ public class Interfaz extends JFrame implements ActionListener{
     public void modificarLabelArray(String msj, int i, int j){
         arraysLabel.get(i).get(j).setText(msj);
     }
+
+    public ArrayList<String> getArrayBolas(){
+        return bolas;
+    }
+
     //
     //
     //
@@ -94,13 +126,52 @@ public class Interfaz extends JFrame implements ActionListener{
     }
 
     //
+    //
+    //
+    
+    public void generarBolas(){
+        for(int i = 0; i<75; i++){
+            bolas.add(i+1+"");
+        }
+    }
+
+    //
     //VENTOS
     //
     public void actionPerformed(ActionEvent event){
         if(event.getSource() == button_close){
             System.exit(0); //Cerrar el programa
         } else if(event.getSource() == button_compra){
-            System.out.println("Desde el boton de compra");; //Cerrar el programa
+            System.out.println("Desde el boton de compra"); //Cerrar el programa
+        } else if(event.getSource() == button_generar_numero){
+            Random aleatorio = new Random();
+            int aux = 0;
+            aux = aleatorio.nextInt(bolas.size()-1);
+
+            modificarLabelArray(bolas.get(aux), countJ, countI);
+            bolasComparacion.add(bolas.get(aux));
+            bolas.remove(aux);
+            
+
+            isGanador();
+
+            if(countJ >= arraysLabel.get(countI).size()-1){
+                countI++;
+                countJ = 0;
+            }else{
+                countJ++;
+            }
         }
+    }
+
+
+    public boolean isGanador(){
+        boolean condicion = false;
+
+        for(int i = 0; i<bingo.size() && !condicion; i++){
+            condicion = Bingo.encontrarGanador(bingoAux.get(i), bolasComparacion);
+        }
+
+        return condicion;
     }
 }
