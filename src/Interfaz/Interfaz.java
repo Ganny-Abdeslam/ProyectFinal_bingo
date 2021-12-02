@@ -1,12 +1,14 @@
 package Interfaz;
 import javax.swing.*;
 import java.awt.event.*;
+import java.awt.Font;
+import javax.swing.JTextField;
 
 public class Interfaz extends JFrame implements ActionListener{
     
     private JButton button_close;
     private JButton button_compra;
-
+    private JTextField texto;
     /**
      * Constructor
      * @param ancho el ancho de la ventana
@@ -25,7 +27,9 @@ public class Interfaz extends JFrame implements ActionListener{
         button_close = crearButton("Cerrar", 550, 550, 100, 30);
 
         //Boton de compra
-        button_compra = crearButton("Comprar Boleto", 50, 550, 150, 30);
+        //button_compra = crearButton("Comprar Boleto", 50, 550, 150, 30);
+
+        texto = texto();
     }
 
     /**
@@ -52,11 +56,21 @@ public class Interfaz extends JFrame implements ActionListener{
     public JButton crearButton(String mensaje, int x, int y, int ancho, int largo){
         JButton button = new JButton(mensaje);
         button.setBounds(x, y, ancho, largo);
+        button.setFont(new Font("Arial", 0, 12));
         add(button);
         button.addActionListener(this); //Evento del boton
         return button;
     }
 
+   
+    public JTextField texto(){
+        JTextField cuadroTexto = new JTextField();
+        cuadroTexto.setBounds(50, 550, 150, 30);
+        add(cuadroTexto);
+        return cuadroTexto;
+
+    }
+        
     //
     //VENTOS
     //
