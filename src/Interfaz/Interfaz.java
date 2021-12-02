@@ -11,6 +11,7 @@ public class Interfaz extends JFrame implements ActionListener{
     private JButton button_close;
     private JButton button_compra;
     private JButton button_generar_numero;
+    private JTextField texto;
 
     private ArrayList<String> bolas = new ArrayList<>();
     private ArrayList<String> bolasComparacion = new ArrayList<>();
@@ -44,6 +45,9 @@ public class Interfaz extends JFrame implements ActionListener{
         //Boton para sacar una bola
         button_generar_numero = crearButton("Sacar Bola", 280, 550, 150, 30);
 
+        generarLabel("Ingrese su cedula: ", 50, 450);
+        texto = texto();
+
         //Añadir un Array de Labels
         addLabelArray();
 
@@ -70,6 +74,14 @@ public class Interfaz extends JFrame implements ActionListener{
         JLabel label = new JLabel(mensja);
         label.setBounds(x, y, 300, 30);
         add(label);
+    }
+
+    public JTextField texto(){
+        JTextField cuadroTexto = new JTextField();
+        cuadroTexto.setBounds(50, 480, 150, 30);
+        add(cuadroTexto);
+        cuadroTexto.setText("");
+        return cuadroTexto;
     }
 
     //
@@ -139,10 +151,17 @@ public class Interfaz extends JFrame implements ActionListener{
     //VENTOS
     //
     public void actionPerformed(ActionEvent event){
+
         if(event.getSource() == button_close){
+            
             System.exit(0); //Cerrar el programa
+
         } else if(event.getSource() == button_compra){
-            System.out.println("Desde el boton de compra"); //Cerrar el programa
+
+            if(!texto.getText().equals("")){
+                System.out.println("Desde el boton de compra"); //Cerrar el programa
+            }
+
         } else if(event.getSource() == button_generar_numero){
             Random aleatorio = new Random();
             int aux = 0;
@@ -151,7 +170,6 @@ public class Interfaz extends JFrame implements ActionListener{
             modificarLabelArray(bolas.get(aux), countJ, countI);
             bolasComparacion.add(bolas.get(aux));
             bolas.remove(aux);
-            
 
             isGanador();
 
