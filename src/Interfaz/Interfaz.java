@@ -19,8 +19,12 @@ public class Interfaz extends JFrame implements ActionListener{
     public ArrayList<ArrayList<String>> bingoAux = new ArrayList<>();
     private ArrayList<ArrayList<JLabel>> arraysLabel = new ArrayList<>();
 
+    private boolean juego_iniciado = false;
+
     private int countI = 0;
     private int countJ = 0;
+    private int boletoGanador = 0;
+    private int countGanadores = 0;
     
     /**
      * Constructor
@@ -150,19 +154,28 @@ public class Interfaz extends JFrame implements ActionListener{
     //
     //VENTOS
     //
+
+    /**
+     * Funcion propia del sistema para genearción de eventos
+     */
     public void actionPerformed(ActionEvent event){
 
         if(event.getSource() == button_close){
             
             System.exit(0); //Cerrar el programa
 
-        } else if(event.getSource() == button_compra){
+        } else if(event.getSource() == button_compra && !juego_iniciado){
 
+            //Se comprueba sí el usuario ingreso su número de cedula para poder comprar un boleto
             if(!texto.getText().equals("")){
-                System.out.println("Desde el boton de compra"); //Cerrar el programa
+                System.out.println("Desde el boton de compra"); //Permite al usuario Comprar boletos
             }
 
         } else if(event.getSource() == button_generar_numero){
+
+            juego_iniciado = true;
+
+            boolean ganador = false;
             Random aleatorio = new Random();
             int aux = 0;
             aux = aleatorio.nextInt(bolas.size()-1);
@@ -171,7 +184,12 @@ public class Interfaz extends JFrame implements ActionListener{
             bolasComparacion.add(bolas.get(aux));
             bolas.remove(aux);
 
-            isGanador();
+            ganador = isGanador();
+
+            if(ganador){
+                System.out.println("El boleto ganador es: "+bingo.get(boletoGanador));
+                System.out.println("El total ganadores es: "+countGanadores);
+            }
 
             if(countJ >= arraysLabel.get(countI).size()-1){
                 countI++;
@@ -183,11 +201,23 @@ public class Interfaz extends JFrame implements ActionListener{
     }
 
 
+    /**
+     * Busca entre las boletas compradas sí ya hay un ganador
+     * @return condicion
+     */
     public boolean isGanador(){
         boolean condicion = false;
+        boolean condicionInterna = false;
 
-        for(int i = 0; i<bingo.size() && !condicion; i++){
-            condicion = Bingo.encontrarGanador(bingoAux.get(i), bolasComparacion);
+        for(int i = 0; i<bingoAux.size(); i++){
+            condicionInterna = Bingo.encontrarGanador(bingoAux.get(i), bolasComparacion);
+            if(condicionInterna){
+                condicion = true;
+                countGanadores++;
+                boletoGanador = i;
+                bingoAux.remove(i);
+                i--;
+            }
         }
 
         return condicion;
