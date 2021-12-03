@@ -271,9 +271,7 @@ public class Interfaz extends JFrame implements ActionListener{
             for(int i=0; i<boletoDeGanadores.length; i++){
                 if(boletoDeGanadores[i] != -1){
                     JOptionPane.showMessageDialog(null, "El boleto ganador es: "+bingo.get(boletoDeGanadores[i]));
-                    //System.out.println("El boleto ganador es: "+bingo.get(boletoDeGanadores[i]));
                 }
-                //System.out.println("El total ganadores es: "+countGanadores);
             }
         }
     }
