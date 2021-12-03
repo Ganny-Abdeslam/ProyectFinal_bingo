@@ -11,9 +11,14 @@ public class Bingo{
      */
     public static ArrayList<ArrayList<ArrayList<String>>> creacionBingo(){
         ArrayList<ArrayList<ArrayList<String>>> bingo = new ArrayList<>();
+        ArrayList<ArrayList<String>> aux = new ArrayList<>();
 
         for(int i = 0; i < 70; i++){
-            bingo.add(crearBoleto());
+            aux = crearBoleto();
+            
+            if(!bingo.containsAll(aux)){
+                bingo.add(aux);
+            }
         }
 
         return bingo;
@@ -49,7 +54,7 @@ public class Bingo{
         for(int i = 0; i < 5; i++){
             aux = generarNumero(max, min);
             if(condicion && i==2){
-                numeros.add(".es");
+                numeros.add("es");
             } else{
                 if(!numeros.contains(aux+"")){
                     numeros.add(aux+"");
