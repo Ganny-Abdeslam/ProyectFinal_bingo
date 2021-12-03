@@ -46,4 +46,16 @@ public class Bingo{
     public static int generarNumero(int min, int max, Random num){
         return num.nextInt(max)+min;
     }
+
+    public static ArrayList<ArrayList<ArrayList<Integer>>> organizarTmanios(ArrayList<ArrayList<ArrayList<Integer>>> bingo) {
+        for (int i = 0; i < bingo.size()-1; i++){
+            for (int j = 0; j < bingo.size(); j++){
+                if (bingo.get(i).size() > bingo.get(j).size()){
+                    bingo.add(i,bingo.get(j));
+                    bingo.remove(j);
+                }
+            }
+        }
+        return bingo;
+    }
 }
