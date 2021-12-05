@@ -16,8 +16,10 @@ public class Interfaz extends JFrame implements ActionListener{
     private JButton button_close;
     private JButton button_compra;
     private JButton button_cercanosGanar;
+    private JButton button_consultar_boleto;
     private JButton button_generar_numero;
     private JTextField texto;
+    private JTextField texto_boleto;
     private JTextField texto_tableros_regalar;
     private JLabel total_recaudado;
     
@@ -30,12 +32,14 @@ public class Interfaz extends JFrame implements ActionListener{
     private ArrayList<ArrayList<JLabel>> arraysLabel = new ArrayList<>();
 
     private boolean juego_iniciado = false;
+    private boolean juego_finalizado = false;
 
     private int countI = 0;
     private int countJ = 0;
     private int countGanadores = 0;
     private int[] boletoDeGanadores = {-1, -1, -1};
     private int countBoletos = 0;
+    private int countRegalados = 0;
 
     //private ArrayList<Carton> cartones = new ArrayList<>();
     
@@ -56,7 +60,8 @@ public class Interfaz extends JFrame implements ActionListener{
         //Boton de cerrado
         button_close = crearButton("Cerrar", 530, 550, 100, 30);
 
-        button_cercanosGanar = crearButton("Mostrar 3 primeros", 280, 400, 150, 30);
+        //Boton de cercanos a ganar
+        button_cercanosGanar = crearButton("Mostrar 3 primeros", 280, 430, 150, 30);
 
         //Boton de compra
         button_compra = crearButton("Comprar Boleto", 50, 550, 150, 30);
@@ -65,15 +70,20 @@ public class Interfaz extends JFrame implements ActionListener{
         button_generar_numero = crearButton("Sacar Bola", 280, 550, 150, 30);
 
         //Fondos Recaudados
-        generarLabelUtilizable("El total vendio fue: ", 490, 450).setFont(new Font("Tahoma", Font.PLAIN, 18));
-        total_recaudado = generarLabelUtilizable("$0.0", 550, 480);
+        generarLabelUtilizable("El total vendio fue: ", 510, 480).setFont(new Font("Tahoma", Font.PLAIN, 18));
+        total_recaudado = generarLabelUtilizable("$0.0", 560, 510);
         total_recaudado.setFont(new Font("Tahoma", Font.PLAIN, 18));
         
-        generarLabelUtilizable("Ingrese su cedula: ", 50, 450).setFont(new Font("Tahoma", Font.PLAIN, 18));;
-        texto = texto(50, 480);
+        generarLabelUtilizable("Ingrese su cedula: ", 50, 480).setFont(new Font("Tahoma", Font.PLAIN, 18));;
+        
+        generarLabelUtilizable("Ingrese tableros regalados: ", 250, 480).setFont(new Font("Tahoma", Font.PLAIN, 18));
 
-        generarLabelUtilizable("Ingrese tableros regalados: ", 240, 450).setFont(new Font("Tahoma", Font.PLAIN, 18));;
-        texto_tableros_regalar = texto(260, 480);
+        //Boton de consutar un boleto en especifico
+        button_consultar_boleto = crearButton("Boleto a consultar", 50, 410, 150, 30);
+
+        texto_boleto = texto(50, 450);
+        texto = texto(50, 510);
+        texto_tableros_regalar = texto(280, 510);
 
         //Añadir un Array de Labels
         addLabelArray();
@@ -273,7 +283,8 @@ public class Interfaz extends JFrame implements ActionListener{
         if(ganador){
             for(int i=0; i<boletoDeGanadores.length; i++){
                 if(boletoDeGanadores[i] != -1){
-                    JOptionPane.showMessageDialog(null, "El boleto ganador es: "+bingo.get(boletoDeGanadores[i]));
+                    JOptionPane.showMessageDialog(null, "El boleto ganador es: ");
+                    generarCartonAmostrar(boletoDeGanadores[i]);
                 }
             }
         }
@@ -293,17 +304,8 @@ public class Interfaz extends JFrame implements ActionListener{
         cartonesUsuarios.get(countBoletos).labelsCarton.get(cartonesUsuarios.get(countBoletos).labelsCarton.size()-1).setText(texto.getText());
 
         for(int i=0, j=0; i<25; i++, j++){
-            if(i<5){
-                aux = j*5;
-            }else if(i<10){
-                aux = j*5+1;
-            }else if(i<15){
-                aux = j*5+2;
-            }else if(i<20){
-                aux = j*5+3;
-            }else if(i<25){
-                aux = j*5+4;
-            }
+            
+            aux = transponerMatriz(aux, i, j, 5);
 
             if(j>=4){
                 j = -1;
@@ -313,6 +315,57 @@ public class Interfaz extends JFrame implements ActionListener{
         }
 
         countBoletos++;
+    }
+
+    public int transponerMatriz(int aux, int i, int j, int escalar){
+        if(i<escalar*1){
+            aux = j*5;
+        }else if(i<escalar*2){
+            aux = j*5+1;
+        }else if(i<escalar*3){
+            aux = j*5+2;
+        }else if(i<escalar*4){
+            aux = j*5+3;
+        }else if(i<escalar*5){
+            aux = j*5+4;
+        }
+        
+        return aux;
+    }
+
+    public void generarCartonAmostrar(int posicion){
+        Carton carton = new Carton();
+        String cedula = "";
+        int aux = 0;
+
+        carton.initialize();
+
+        for(int i=0; i<5; i++){
+            for(int j=0; j<5; j++){
+                aux = transponerMatriz(aux, i, j, 1);
+                carton.labelsCarton.get(aux).setText(bingo.get(posicion).get(i).get(j));
+            }
+        }
+
+        if(posicion < countBoletos){
+            cedula += cartonesUsuarios.get(posicion).labelsCarton.get(cartonesUsuarios.get(posicion).labelsCarton.size()-1).getText();
+            carton.labelsCarton.get(carton.labelsCarton.size()-1).setText(cedula);
+        }else{
+            carton.labelsCarton.get(carton.labelsCarton.size()-1).setText("Regalado");
+        }
+        
+        rellenarCartonesMostrados(carton);
+
+    }
+
+    private void rellenarCartonesMostrados(Carton carton){
+        for(int i=0; i<countBoletos; i++){
+            for(int j=0; j<carton.labelsCarton.size(); j++){
+                if(bolasComparacion.indexOf(carton.labelsCarton.get(j).getText()) != -1){
+                    carton.labelsCarton.get(j).setBackground(Color.GREEN);
+                }
+            }
+        }
     }
 
     private void rellenarCartones(){
@@ -327,11 +380,12 @@ public class Interfaz extends JFrame implements ActionListener{
     
     private void generarBingosAsistentes(){
         if(!texto_tableros_regalar.getText().equals("")){
-            for(int i=0; i < Integer.parseInt(texto_tableros_regalar.getText()); i++){
+            for(int i=0; i < countRegalados; i++){
                 bingoAux.add(Bingo.generarVector(bingo.get(countBoletos+i)));
             }
         }
     }
+    
     //
     //VENTOS
     //
@@ -355,11 +409,13 @@ public class Interfaz extends JFrame implements ActionListener{
                 generacionCartonUsuario();
             }
 
-        } else if(event.getSource() == button_generar_numero){
+        } else if(event.getSource() == button_generar_numero && !juego_finalizado){
 
             //Activa la condición de Juego iniciado para no poder comprar más boletos
             if(!juego_iniciado){
                 total_recaudado.setText("$"+countBoletos*50);
+
+                countRegalados = Integer.parseInt(texto_tableros_regalar.getText());
 
                 generarBingosAsistentes();
                 
@@ -368,6 +424,11 @@ public class Interfaz extends JFrame implements ActionListener{
 
             extraerNumeros();
             encontrarGanadores();
+
+            if(countGanadores >= 3){
+                juego_finalizado = true;
+                JOptionPane.showMessageDialog(null, "Felicidades Shinji");
+            }
 
             //Organiza la forma en la que se visualiza las bolas sacadas en la interfaz
             if(countJ >= arraysLabel.get(countI).size()-1){
@@ -381,10 +442,25 @@ public class Interfaz extends JFrame implements ActionListener{
         } else if (event.getSource() == button_cercanosGanar){
             //Ventanas.mostrarCercanosGanar(bingoAux);
             int [] aux = Bingo.organizarTamanios(bingoAux);
-            for(int i=0; i<3; i++){
-                JOptionPane.showMessageDialog(null, bingo.get(aux[i]));
+            for(int i=0; i<aux.length && i<3; i++){
+                generarCartonAmostrar(aux[i]);
             }
-            System.out.println("Si funciona");
+            
+            JOptionPane.showMessageDialog(null, "Estas tres ventanas emergenten son los cercanos a ganar");
+
+            if(aux.length < 3){
+                JOptionPane.showMessageDialog(null, "Actualmente hay muy pocos jugadores activos");
+            }
+        } else if (event.getSource() == button_consultar_boleto){
+
+            if(!texto_boleto.getText().equals("")){
+                if(countBoletos+countRegalados >= Integer.parseInt(texto_boleto.getText())){
+                    generarCartonAmostrar(Integer.parseInt(texto_boleto.getText())-1);
+                }else{
+                    int total = countBoletos+countRegalados;
+                    JOptionPane.showMessageDialog(null, "Actualemte solo hay: "+total+" de judores");
+                }
+            }
         }
     }
 }

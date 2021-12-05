@@ -98,7 +98,6 @@ public class Bingo{
 
         if(bingo.size() == 0){
             condicion = true;
-            System.out.println("Alguien gano");
         }
         
         return condicion;
@@ -135,43 +134,67 @@ public class Bingo{
     public static int[] organizarTamanios(ArrayList<ArrayList<String>> bingoVector) {
         
         ArrayList<ArrayList<String>> arreglo = new ArrayList<>();
-        ArrayList<String> elementoActual = new ArrayList<>();
-        ArrayList<String> elementoSiguiente = new ArrayList<>();
+        int[] arregloDatos = new int[bingoVector.size()];
 
-        for (int i = 0; i < bingoVector.size(); i++) {
-            for (int j = 0; j < bingoVector.size() - 1; j++) {
-                for(int k=0; k < bingoVector.get(j).size(); k++){
-                    elementoActual.add(bingoVector.get(j).get(k));   
-                }
-                for(int k=0; k < bingoVector.get(j+1).size(); k++){
-                    elementoSiguiente.add(bingoVector.get(j+1).get(k));
-                }
-                
-                if (elementoActual.size() > elementoSiguiente.size()) {
-                    //System.out.println(elementoActual.size() +"---el otro es---"+elementoSiguiente.size());
-                    arreglo.add(elementoSiguiente);
-                    arreglo.add(arreglo.size()-1,elementoActual);
-                }
+        copiarArrays(bingoVector, arreglo);        
 
-                elementoActual.clear();
-                elementoSiguiente.clear();
-            }
-        }
+        arregloDatos = InicializarArreglos(arregloDatos);
 
-        int[] arregloDatos = new int[arreglo.size()];
-        System.out.println("Hasta aquí funciono xd");
+        metodoBurbuja(bingoVector, arreglo);
 
+        arregloDatos = obtencionDePosicionesAscendente(bingoVector, arreglo, arregloDatos);
+
+        return arregloDatos;
+    }
+
+    public static int[] InicializarArreglos(int[] arregloDatos){
+        
         for(int i=0; i<arregloDatos.length; i++){
             arregloDatos[i] = -1;
         }
 
-        for(int i=0; i<arreglo.size()-1; i++){
-            for(int j=0; j<arregloDatos.length; j++){
-                if(arregloDatos[j] != -1){
-                    // System.out.println("se desbordo");
-                    arregloDatos[j] = bingoVector.indexOf(arreglo.get(i));
+        return arregloDatos;
+    }
+
+    public static void copiarArrays(ArrayList<ArrayList<String>> bingoVector, ArrayList<ArrayList<String>> arreglo){
+        for(ArrayList<String> text : bingoVector){
+            arreglo.add(text);
+        }
+    }
+
+    public static void metodoBurbuja(ArrayList<ArrayList<String>> bingoVector, ArrayList<ArrayList<String>> arreglo){
+        
+        for (int i = 0; i < bingoVector.size(); i++) {
+            for (int j = 0; j < bingoVector.size() - 1; j++) {
+                
+                if (arreglo.get(j).size() > arreglo.get(j+1).size()) {
+                    if(arreglo.get(j).size() != 0){
+                        ArrayList<String> aux = new ArrayList<>(arreglo.get(j));
+                    arreglo.set(j, arreglo.get(j+1));
+                    arreglo.set(j+1, aux);
+                    }
                 }
+
             }
+        }
+    }
+
+    public static int[] obtencionDePosicionesAscendente(ArrayList<ArrayList<String>> bingoVector, ArrayList<ArrayList<String>> arreglo, int[] arregloDatos){
+        int condicion = 0;
+        boolean banderilla = false;
+        for(int x=0; x < arreglo.size(); x++){
+            
+            condicion = bingoVector.indexOf(arreglo.get(x));
+            
+            for(int y=0; y<arregloDatos.length && !banderilla; y++){
+            
+                if(condicion != arregloDatos[y] && arregloDatos[y] == -1){
+                    arregloDatos[y] = condicion;
+                    banderilla = true;
+                }
+
+            }
+            banderilla = false;
         }
         return arregloDatos;
     }
