@@ -24,7 +24,8 @@ public class App {
     public static final int ALTO = 650;
     
     public static void main(String[] args) throws Exception {
-        Interfaz interfaz = new Interfaz(ANCHO, ALTO); //Definir un objeto tipo Interfaz (swing)
+        Interfaz interfaz = new Interfaz(); //Definir un objeto tipo Interfaz (swing)
+        interfaz.Inicializar(ANCHO, ALTO);
     }
 
 }

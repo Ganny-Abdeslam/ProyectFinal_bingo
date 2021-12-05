@@ -43,7 +43,7 @@ public class Interfaz extends JFrame implements ActionListener{
      * @param ancho el ancho de la ventana
      * @param alto la altura de la ventana
      */
-    public Interfaz(int ancho, int alto){
+    public void Inicializar(int ancho, int alto){
         setLayout(null);
         //Genera los parametros iniciales de la interfaz (x.inicio, y.inicio, ancho, alto)
         setBounds(0, 0, ancho, alto);
