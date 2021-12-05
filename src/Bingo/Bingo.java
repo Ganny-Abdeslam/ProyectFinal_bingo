@@ -131,4 +131,16 @@ public class Bingo{
         }
         return vector;
     }
+
+    public static ArrayList<ArrayList<String>> organizarTamanios(ArrayList<ArrayList<String>> bingo) {
+        ArrayList<ArrayList<String>> arreglo = new ArrayList<ArrayList<String>>(3);
+        for (int i = 0; i < bingo.size()-1; i++){
+            for (int j = 0; j < bingo.size(); j++){
+                if (bingo.get(i).size() > bingo.get(j).size()){
+                    arreglo.add(i,bingo.get(j));
+                }
+            }
+        }
+        return arreglo;
+    }
 }

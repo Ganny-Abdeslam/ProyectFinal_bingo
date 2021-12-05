@@ -10,10 +10,12 @@ import javax.swing.border.LineBorder;
 
 import Bingo.Bingo;
 import Carton.Carton;
+import Ventanas.Ventanas;
 
 public class Interfaz extends JFrame implements ActionListener{
     
     private JButton button_close;
+    private JButton button_cercanosGanar;
     private JButton button_compra;
     private JButton button_generar_numero;
     private JTextField texto;
@@ -60,6 +62,8 @@ public class Interfaz extends JFrame implements ActionListener{
 
         //Boton para sacar una bola
         button_generar_numero = crearButton("Sacar Bola", 280, 550, 150, 30);
+
+        button_cercanosGanar = crearButton("Mostrar 3 primeros", 280, 400, 150, 30);
 
         //Fondos Recaudados
         generarLabelUtilizable("El total vendio fue: ", 490, 450).setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -375,8 +379,14 @@ public class Interfaz extends JFrame implements ActionListener{
             }else{
                 countJ++;
             }
-
+            if (event.getSource() == button_cercanosGanar){
+                Ventanas.mostrarCercanosGanar(bingoAux);
+                System.out.println("Si funciona");
+            }
             rellenarCartones();
+        } else if (event.getSource() == button_cercanosGanar){
+            Ventanas.mostrarCercanosGanar(bingoAux);
+            System.out.println("Si funciona");
         }
     }
 }
