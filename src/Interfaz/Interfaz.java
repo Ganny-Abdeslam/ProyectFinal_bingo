@@ -380,8 +380,13 @@ public class Interfaz extends JFrame implements ActionListener{
     
     private void generarBingosAsistentes(){
         if(!texto_tableros_regalar.getText().equals("")){
-            for(int i=0; i < countRegalados; i++){
-                bingoAux.add(Bingo.generarVector(bingo.get(countBoletos+i)));
+            if(countRegalados+countBoletos < bingo.size()){
+                for(int i=0; i < countRegalados; i++){
+                    bingoAux.add(Bingo.generarVector(bingo.get(countBoletos+i)));
+                }
+            } else{
+                JOptionPane.showMessageDialog(null, "Ingreso de masiados boletos solo hay: "+bingo.size());
+                juego_iniciado = false;
             }
         }
     }
@@ -402,7 +407,7 @@ public class Interfaz extends JFrame implements ActionListener{
         } else if(event.getSource() == button_compra && !juego_iniciado){
 
             //Se comprueba sí el usuario ingreso su número de cedula para poder comprar un boleto
-            if(!texto.getText().equals("")){
+            if(!texto.getText().equals("") && countBoletos < 70){
 
                 generarBingosComprados();
 
@@ -417,28 +422,32 @@ public class Interfaz extends JFrame implements ActionListener{
 
                 countRegalados = Integer.parseInt(texto_tableros_regalar.getText());
 
+                juego_iniciado = true;
+
                 generarBingosAsistentes();
                 
-                juego_iniciado = true;
             }
 
-            extraerNumeros();
-            encontrarGanadores();
+            if(juego_iniciado){
+                extraerNumeros();
+                encontrarGanadores();
 
-            if(countGanadores >= 3){
-                juego_finalizado = true;
-                JOptionPane.showMessageDialog(null, "Felicidades Shinji");
-            }
-
-            //Organiza la forma en la que se visualiza las bolas sacadas en la interfaz
-            if(countJ >= arraysLabel.get(countI).size()-1){
-                countI++;
-                countJ = 0;
-            }else{
-                countJ++;
+                if(countGanadores >= 3){
+                    juego_finalizado = true;
+                    JOptionPane.showMessageDialog(null, "Felicidades Shinji");
+                }
+            
+                //Organiza la forma en la que se visualiza las bolas sacadas en la interfaz
+                if(countJ >= arraysLabel.get(countI).size()-1){
+                    countI++;
+                    countJ = 0;
+                }else{
+                    countJ++;
+                }
             }
 
             rellenarCartones();
+            
         } else if (event.getSource() == button_cercanosGanar){
             //Ventanas.mostrarCercanosGanar(bingoAux);
             int [] aux = Bingo.organizarTamanios(bingoAux);
