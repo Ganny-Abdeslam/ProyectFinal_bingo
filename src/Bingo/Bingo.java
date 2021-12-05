@@ -131,4 +131,48 @@ public class Bingo{
         }
         return vector;
     }
+
+    public static int[] organizarTamanios(ArrayList<ArrayList<String>> bingoVector) {
+        
+        ArrayList<ArrayList<String>> arreglo = new ArrayList<>();
+        ArrayList<String> elementoActual = new ArrayList<>();
+        ArrayList<String> elementoSiguiente = new ArrayList<>();
+
+        for (int i = 0; i < bingoVector.size(); i++) {
+            for (int j = 0; j < bingoVector.size() - 1; j++) {
+                for(int k=0; k < bingoVector.get(j).size(); k++){
+                    elementoActual.add(bingoVector.get(j).get(k));   
+                }
+                for(int k=0; k < bingoVector.get(j+1).size(); k++){
+                    elementoSiguiente.add(bingoVector.get(j+1).get(k));
+                }
+                
+                if (elementoActual.size() > elementoSiguiente.size()) {
+                    //System.out.println(elementoActual.size() +"---el otro es---"+elementoSiguiente.size());
+                    arreglo.add(elementoSiguiente);
+                    arreglo.add(arreglo.size()-1,elementoActual);
+                }
+
+                elementoActual.clear();
+                elementoSiguiente.clear();
+            }
+        }
+
+        int[] arregloDatos = new int[arreglo.size()];
+        System.out.println("Hasta aquí funciono xd");
+
+        for(int i=0; i<arregloDatos.length; i++){
+            arregloDatos[i] = -1;
+        }
+
+        for(int i=0; i<arreglo.size()-1; i++){
+            for(int j=0; j<arregloDatos.length; j++){
+                if(arregloDatos[j] != -1){
+                    // System.out.println("se desbordo");
+                    arregloDatos[j] = bingoVector.indexOf(arreglo.get(i));
+                }
+            }
+        }
+        return arregloDatos;
+    }
 }

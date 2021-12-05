@@ -15,6 +15,7 @@ public class Interfaz extends JFrame implements ActionListener{
     
     private JButton button_close;
     private JButton button_compra;
+    private JButton button_cercanosGanar;
     private JButton button_generar_numero;
     private JTextField texto;
     private JTextField texto_tableros_regalar;
@@ -54,6 +55,8 @@ public class Interfaz extends JFrame implements ActionListener{
 
         //Boton de cerrado
         button_close = crearButton("Cerrar", 530, 550, 100, 30);
+
+        button_cercanosGanar = crearButton("Mostrar 3 primeros", 280, 400, 150, 30);
 
         //Boton de compra
         button_compra = crearButton("Comprar Boleto", 50, 550, 150, 30);
@@ -375,6 +378,13 @@ public class Interfaz extends JFrame implements ActionListener{
             }
 
             rellenarCartones();
+        } else if (event.getSource() == button_cercanosGanar){
+            //Ventanas.mostrarCercanosGanar(bingoAux);
+            int [] aux = Bingo.organizarTamanios(bingoAux);
+            for(int i=0; i<3; i++){
+                JOptionPane.showMessageDialog(null, bingo.get(aux[i]));
+            }
+            System.out.println("Si funciona");
         }
     }
 }
