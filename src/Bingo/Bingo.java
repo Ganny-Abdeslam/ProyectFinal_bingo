@@ -4,58 +4,198 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Bingo{
-    
-    public static ArrayList<ArrayList<ArrayList<Integer>>> creacionBingo(){
-        ArrayList<ArrayList<ArrayList<Integer>>> bingo = new ArrayList<>();
+
+    /**
+     * Generación de las 70 boletas en un array 3D
+     * @return bingo Un array3D con 70 boletas de bingo 
+     */
+    public static ArrayList<ArrayList<ArrayList<String>>> creacionBingo(){
+        ArrayList<ArrayList<ArrayList<String>>> bingo = new ArrayList<>();
+        ArrayList<ArrayList<String>> aux = new ArrayList<>();
 
         for(int i = 0; i < 70; i++){
-            bingo.add(crearBoleto());
+            aux = crearBoleto();
+            
+            if(!bingo.containsAll(aux)){
+                bingo.add(aux);
+            }
         }
 
         return bingo;
     }
 
-    public static ArrayList<ArrayList<Integer>> crearBoleto(){
-        ArrayList<ArrayList<Integer>> boleto = new ArrayList<>();
+    /**
+     * Generación de un boleto con sus respectivos intervalos para cada letra
+     * @return boleto Una matriz con 5 filas y columnas 
+     */
+    public static ArrayList<ArrayList<String>> crearBoleto(){
+        ArrayList<ArrayList<String>> boleto = new ArrayList<>();
 
-        boleto.add(generacionLetras(1, 15));    //Generación de B
-        boleto.add(generacionLetras(16, 15));   //Generación de I
-        boleto.add(generacionLetras(31, 15));   //Generación de O
-        boleto.add(generacionLetras(46, 15));   //Generación de N
-        boleto.add(generacionLetras(61, 15));   //Generación de G
+        boleto.add(generacionLetras(1, 15, false));     //Generación de B
+        boleto.add(generacionLetras(16, 15, false));    //Generación de I
+        boleto.add(generacionLetras(31, 15, true));     //Generación de N
+        boleto.add(generacionLetras(46, 15, false));    //Generación de G
+        boleto.add(generacionLetras(61, 15, false));    //Generación de O
 
         return boleto;
     }
 
-    public static ArrayList<Integer> generacionLetras(int min, int max){
-        ArrayList<Integer> numeros = new ArrayList<>();
-        Random aleatorio = new Random();
+    /**
+     * Generación de cada letra con sus números internos generados de forma aleatoria
+     * @param max El tamaño minimo para la generación del random
+     * @param min El tamaño máximo para la generación del random
+     * @param condicion Sí es el centro de la matriz se remplaza por un ".es"
+     * @return numeros vector de 5 posciones con sus números generados de forma aleatoria
+     */
+    public static ArrayList<String> generacionLetras(int max, int min, boolean condicion){
+        ArrayList<String> numeros = new ArrayList<>();
         int aux = 0;
 
         for(int i = 0; i < 5; i++){
-            aux = generarNumero(min, max, aleatorio); 
-            if(!numeros.contains(aux)){
-                numeros.add(aux);
+            aux = generarNumero(max, min);
+            if(condicion && i==2){
+                numeros.add("es");
             } else{
-                i--;
+                if(!numeros.contains(aux+"")){
+                    numeros.add(aux+"");
+                } else{
+                    i--;
+                }
             }
         }
         return numeros;
     }
 
-    public static int generarNumero(int min, int max, Random num){
-        return num.nextInt(max)+min;
+    /**
+     * Genera un número aleatorio con su respectivo intervalo, que va de 0--min+max para así especificar que
+     * solo tome del min-max es decir {(0-15)+31 de tal forma que solo tomaría el rango de 31-46 excluyendo el 46}
+     * @param max El tamaño minimo para la generación del random
+     * @param min El tamaño minimo para la generación del random
+     * @return un número aleatorio
+     */
+    public static int generarNumero(int max, int min){
+        Random aleatorio = new Random();
+        return aleatorio.nextInt(min)+max;
     }
 
-    public static ArrayList<ArrayList<ArrayList<Integer>>> organizarTmanios(ArrayList<ArrayList<ArrayList<Integer>>> bingo) {
-        for (int i = 0; i < bingo.size()-1; i++){
-            for (int j = 0; j < bingo.size(); j++){
-                if (bingo.get(i).size() > bingo.get(j).size()){
-                    bingo.add(i,bingo.get(j));
-                    bingo.remove(j);
-                }
+    /**
+     * Encuentra sí un vector completo de un boleto del bingo concide con el vector de bolas sacadas (vectorGanador)
+     * @param bingo Vector de un boleto del bingo
+     * @param vectorGanador Vector de bolas sacadas
+     * @return condicion Un valor sí el 
+     */
+    public static boolean encontrarGanador( ArrayList<String> bingo, ArrayList<String> vectorGanador){
+        boolean condicion = false;
+        int aux = 0;
+
+        for(int i = 0; i < bingo.size(); i++){
+            aux = vectorGanador.indexOf(bingo.get(i)); 
+            if(aux != -1){
+                bingo.remove(i);
+                i--;
             }
         }
-        return bingo;
+
+        if(bingo.size() == 0){
+            condicion = true;
+        }
+        
+        return condicion;
+    }
+
+    /**
+     * Se almacena el bingo en un vector2D para un manejo más sencillo de los datos
+     * @param bingo El bingo con todos los boletos comprados
+     * @return vector2D todos los boletos reorganizados de una forma 2D más sencilla
+     */
+    public static ArrayList<ArrayList<String>> convertirAVector(ArrayList<ArrayList<ArrayList<String>>> bingo){
+        ArrayList<ArrayList<String>> vector2D = new ArrayList<>();
+        for(int i = 0; i < bingo.size(); i++){
+            vector2D.add(generarVector(bingo.get(i)));
+        }
+        return vector2D;
+    }
+
+    /**
+     * Reorganiza la matriz de cada boleto que tiene el bingo volviendolo un vector
+     * @param vector2D El bingo en un vector2D para reorganizarlo
+     * @return vector Un vector de 25 números que son los de cada boleto
+     */
+    public static ArrayList<String> generarVector(ArrayList<ArrayList<String>> vector2D){
+        ArrayList<String> vector = new ArrayList<>();
+        for(int i = 0; i < vector2D.size(); i++){
+            for(int j = 0; j < vector2D.get(i).size(); j++){
+                vector.add(vector2D.get(i).get(j));
+            }
+        }
+        return vector;
+    }
+
+    public static int[] organizarTamanios(ArrayList<ArrayList<String>> bingoVector) {
+        
+        ArrayList<ArrayList<String>> arreglo = new ArrayList<>();
+        int[] arregloDatos = new int[bingoVector.size()];
+
+        copiarArrays(bingoVector, arreglo);        
+
+        arregloDatos = InicializarArreglos(arregloDatos);
+
+        metodoBurbuja(bingoVector, arreglo);
+
+        arregloDatos = obtencionDePosicionesAscendente(bingoVector, arreglo, arregloDatos);
+
+        return arregloDatos;
+    }
+
+    public static int[] InicializarArreglos(int[] arregloDatos){
+        
+        for(int i=0; i<arregloDatos.length; i++){
+            arregloDatos[i] = -1;
+        }
+
+        return arregloDatos;
+    }
+
+    public static void copiarArrays(ArrayList<ArrayList<String>> bingoVector, ArrayList<ArrayList<String>> arreglo){
+        for(ArrayList<String> text : bingoVector){
+            arreglo.add(text);
+        }
+    }
+
+    public static void metodoBurbuja(ArrayList<ArrayList<String>> bingoVector, ArrayList<ArrayList<String>> arreglo){
+        
+        for (int i = 0; i < bingoVector.size(); i++) {
+            for (int j = 0; j < bingoVector.size() - 1; j++) {
+                
+                if (arreglo.get(j).size() > arreglo.get(j+1).size()) {
+                    if(arreglo.get(j).size() != 0){
+                        ArrayList<String> aux = new ArrayList<>(arreglo.get(j));
+                    arreglo.set(j, arreglo.get(j+1));
+                    arreglo.set(j+1, aux);
+                    }
+                }
+
+            }
+        }
+    }
+
+    public static int[] obtencionDePosicionesAscendente(ArrayList<ArrayList<String>> bingoVector, ArrayList<ArrayList<String>> arreglo, int[] arregloDatos){
+        int condicion = 0;
+        boolean banderilla = false;
+        for(int x=0; x < arreglo.size(); x++){
+            
+            condicion = bingoVector.indexOf(arreglo.get(x));
+            
+            for(int y=0; y<arregloDatos.length && !banderilla; y++){
+            
+                if(condicion != arregloDatos[y] && arregloDatos[y] == -1){
+                    arregloDatos[y] = condicion;
+                    banderilla = true;
+                }
+
+            }
+            banderilla = false;
+        }
+        return arregloDatos;
     }
 }
