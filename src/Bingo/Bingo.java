@@ -79,7 +79,7 @@ public class Bingo{
     }
 
     /**
-     * Encuentra sí un vector completo de un boleto del bingo concide con el vector de bolas sacadas (vectorGanador)
+     * Encuentra sí un vector completo de un boleto del bingo coincide con el vector de bolas sacadas (vectorGanador)
      * @param bingo Vector de un boleto del bingo
      * @param vectorGanador Vector de bolas sacadas
      * @return condicion Un valor sí el 
@@ -131,6 +131,11 @@ public class Bingo{
         return vector;
     }
 
+    /**
+     * Funcion que organiza los vectores de una matriz por tamanio de menor a mayor
+     * @param bingoVector Matriz con todas la boletas en juego
+     * @return arregloDatos vector de enteros con las posiciones de la matriz de boletos ordendos de menor a mayor
+     */
     public static int[] organizarTamanios(ArrayList<ArrayList<String>> bingoVector) {
         
         ArrayList<ArrayList<String>> arreglo = new ArrayList<>();
@@ -147,6 +152,11 @@ public class Bingo{
         return arregloDatos;
     }
 
+    /**
+     * Inicializa un arreglo de enteros con -1
+     * @param arregloDatos arreglo de enteros
+     * @return arregloDatos arreglo de enteros lleno con -1
+     */
     public static int[] InicializarArreglos(int[] arregloDatos){
         
         for(int i=0; i<arregloDatos.length; i++){
@@ -156,12 +166,24 @@ public class Bingo{
         return arregloDatos;
     }
 
+    /**
+     * Copia los elementos de la primera matriz en la segundo amtriz por medio de un for-each
+     * @param bingoVector Primera matriz llena con elementos a copiar
+     * @param arreglo Segunda matriz que obtendrá los elementos de la primera matriz
+     */
     public static void copiarArrays(ArrayList<ArrayList<String>> bingoVector, ArrayList<ArrayList<String>> arreglo){
         for(ArrayList<String> text : bingoVector){
             arreglo.add(text);
         }
     }
 
+    /**
+     * Realizar el metodo de la burbuja para el ordenimiento ascendente o descendente de un vector
+     * En este caso, este metodo organiza las posiciones de una matriz, ordenando sus vectores asociados
+     * de forma ascendente segun su tamanio
+     * @param bingoVector Matriz original que posee los tablones de bingo en juego
+     * @param arreglo Matriz de tablones de bingo en juego en reordenamiento por tamanio
+     */
     public static void metodoBurbuja(ArrayList<ArrayList<String>> bingoVector, ArrayList<ArrayList<String>> arreglo){
         
         for (int i = 0; i < bingoVector.size(); i++) {
@@ -179,6 +201,13 @@ public class Bingo{
         }
     }
 
+    /**
+     * Obtiene un vector de enteros con las posiciones de las tableros, previamente organizados de forma ascendente
+     * @param bingoVector Matriz orginal con los tableros de bingo en juego
+     * @param arreglo Matriz con los tableros organizados por tamanio de forma ascendente
+     * @param arregloDatos Vector de enteros lleno con -1
+     * @return arregloDatos Vector de enteros con las posciones de los tableros de bingo en juego organizados
+     */
     public static int[] obtencionDePosicionesAscendente(ArrayList<ArrayList<String>> bingoVector, ArrayList<ArrayList<String>> arreglo, int[] arregloDatos){
         int condicion = -1;
         boolean banderilla = false;

@@ -34,12 +34,12 @@ public class Interfaz extends JFrame implements ActionListener{
     private boolean juego_iniciado = false;
     private boolean juego_finalizado = false;
 
-    private int countI = 0;
-    private int countJ = 0;
-    private int countGanadores = 0;
-    private int[] boletoDeGanadores = {-1, -1, -1};
-    private int countBoletos = 0;
-    private int countRegalados = 0;
+    private int countI = 0; // Contador para recorre la matriz de bolas generadas
+    private int countJ = 0; // Contador para recorre la matriz de bolas generadas
+    private int countGanadores = 0; //Cnatidad de ganadores en tiempo real
+    private int[] boletoDeGanadores = {-1, -1, -1}; // Posiciones de los boletos que han ganado
+    private int countBoletos = 0; // Cantidad de boletos comprados
+    private int countRegalados = 0; // Cantidad de boletos regalados
 
     //private ArrayList<Carton> cartones = new ArrayList<>();
     
@@ -207,7 +207,7 @@ public class Interfaz extends JFrame implements ActionListener{
 
     /**
      * Busca entre las boletas compradas sí ya hay un ganador
-     * @return condicion
+     * @return condicion Variable que contiene true si hay un ganador o false en caso contrario
      */
     public boolean isGanador(){
         boolean condicion = false;
@@ -228,6 +228,11 @@ public class Interfaz extends JFrame implements ActionListener{
         return condicion;
     }
 
+    /**
+     * Identificar si la posicion existe dentro del vector de boletos ganadores
+     * @param iterador Posicion a buscar
+     * @return condicion Indica si la posicion se encuentra dentro del arreglo con un true, en caso contrario, false
+     */
     private boolean identificarSiExiste(int iterador){
         boolean condicion = false;
         for(int i=0; i<boletoDeGanadores.length && !condicion; i++){
@@ -238,6 +243,11 @@ public class Interfaz extends JFrame implements ActionListener{
         return condicion;
     }
 
+    /**
+     * Identifica si el tablero ganador es regalado o comprado
+     * @param i Posicion del boleto en el arreglo de boletos en juego
+     * Si la posicion ees mayor a la cantidad de boletos comprados, significa que es un tablero comprado
+     */
     public void identificarBoleto(int i){
         if(i > countBoletos){
             JOptionPane.showMessageDialog(null, "Ganador del bingo fue un tablero regalado");
@@ -283,11 +293,17 @@ public class Interfaz extends JFrame implements ActionListener{
         }
     }
 
+    /**
+     * Genera una matriz con los vectores de los tableros comprados
+     */
     private void generarBingosComprados(){
         //Bingo Auxiliar para identificar ganadores
         bingoAux.add(Bingo.generarVector(bingo.get(countBoletos)));
     }
 
+    /**
+     * Genera los tableros comprados por los usuarios, dandoles un label propio para imprimirlos en pantalla
+     */
     private void generacionCartonUsuario(){
         Carton carton = new Carton();
         int aux = 0;
@@ -310,6 +326,15 @@ public class Interfaz extends JFrame implements ActionListener{
         countBoletos++;
     }
 
+    /**
+     * Obtiene la posicion de un numero traspuesto de una fila o columna de una matriz se utiliza más que todo para la impresión,
+     * ya que la impresión es un vector y se debe viasualizar en tipo matriz, por eso el calculo raro para una matriz 5*5
+     * @param i hasta donde se desea llegar en las posiciones del vector bingo o bingoAux
+     * @param j Las direcciones en j que son las cuales me llevan a una impresión adecuada. Ejemplo pasar de la posición 0 a la 5 para
+     * lograr imprimir la matriz en columnas y no en filas.
+     * @param escalar Aquel que se ocupa para identificar con cuanto se esta trabajando el vector o matriz y para no desbordarse
+     * @return numero La posición final en la que se debe llegar a imprimir el número
+     */
     public int transponerMatriz(int i, int j, int escalar){
         int numero = 0;
 
@@ -328,6 +353,10 @@ public class Interfaz extends JFrame implements ActionListener{
         return numero;
     }
 
+    /**
+     * Genera los tableros de los ganadores que se imprimen en pantalla
+     * @param posicion del tablero ganador
+     */
     public void generarCartonAmostrar(int posicion){
         Carton carton = new Carton();
         String cedula = "";
@@ -353,6 +382,11 @@ public class Interfaz extends JFrame implements ActionListener{
 
     }
 
+    /**
+     * Rellena las posiciones dentro del tablero que se muestra en pantalla con color verde
+     * Esto se realiza cuando se ha sacado una bola que coincide con un numero dentro de una matriz de un tablero
+     * @param carton objeto de tipo carton que tiene un tablero especificado
+     */
     private void rellenarCartonesMostrados(Carton carton){
         for(int i=0; i<countBoletos; i++){
             for(int j=0; j<carton.labelsCarton.size(); j++){
@@ -363,6 +397,9 @@ public class Interfaz extends JFrame implements ActionListener{
         }
     }
 
+    /**
+     * Rellena las posiciones dentro de los tableros comprados por el usuario que se imperimen antes del inicio del juego
+     */
     private void rellenarCartones(){
         for(int i=0; i<countBoletos; i++){
             for(int j=0; j<cartonesUsuarios.get(i).labelsCarton.size(); j++){
@@ -372,7 +409,10 @@ public class Interfaz extends JFrame implements ActionListener{
             }
         }
     }
-    
+
+    /**
+     * Genera los tableros de bingo de los asistentes cuando el usuario indica que va a regalar una cantidad de bingos
+     */
     private void generarBingosAsistentes(){
         if(!texto_tableros_regalar.getText().equals("")){
             if(countRegalados+countBoletos <= bingo.size()){
@@ -423,10 +463,12 @@ public class Interfaz extends JFrame implements ActionListener{
                 
             }
 
+            //Se comprueba sí el juego se inicio ya que sí se excede el número de Bingos no se puede llegar a iniciar
             if(juego_iniciado){
                 extraerNumeros();
                 encontrarGanadores();
 
+                //Comprueba cuando se cumplen 3 ganadores para la finalización del juego
                 if(countGanadores >= 3){
                     juego_finalizado = true;
                     JOptionPane.showMessageDialog(null, "Felicidades Shinji");
@@ -452,11 +494,13 @@ public class Interfaz extends JFrame implements ActionListener{
             
             JOptionPane.showMessageDialog(null, "Estas tres ventanas emergenten son los cercanos a ganar");
 
+            //Sí juegan menos de 3 usuarios no se pueden visualizar más cartones de los usuarios activos
             if(aux.length < 3){
                 JOptionPane.showMessageDialog(null, "Actualmente hay muy pocos jugadores activos");
             }
         } else if (event.getSource() == button_consultar_boleto){
 
+            //Identifica que el campo no este vacio para lograr buscar un boleto
             if(!texto_boleto.getText().equals("")){
                 if(countBoletos+countRegalados >= Integer.parseInt(texto_boleto.getText())){
                     generarCartonAmostrar(Integer.parseInt(texto_boleto.getText())-1);
