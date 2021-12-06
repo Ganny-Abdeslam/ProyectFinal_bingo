@@ -218,7 +218,9 @@ public class Interfaz extends JFrame implements ActionListener{
             if(condicionInterna){
                 condicion = true;
                 if(countGanadores < boletoDeGanadores.length && !identificarSiExiste(i)){
+                    boletoDeGanadores[countGanadores] = i;
                     identificarBoleto(i);
+                    countGanadores++;
                 }
             }
         }
@@ -237,13 +239,11 @@ public class Interfaz extends JFrame implements ActionListener{
     }
 
     public void identificarBoleto(int i){
-        boletoDeGanadores[countGanadores] = i;
-        if(i > countGanadores){
+        if(i > countBoletos){
             JOptionPane.showMessageDialog(null, "Ganador del bingo fue un tablero regalado");
         }else{
             JOptionPane.showMessageDialog(null, "Ganador del bingo fue un tablero comprado");
         }
-        countGanadores++;
     }
 
     /**
@@ -373,7 +373,7 @@ public class Interfaz extends JFrame implements ActionListener{
     
     private void generarBingosAsistentes(){
         if(!texto_tableros_regalar.getText().equals("")){
-            if(countRegalados+countBoletos < bingo.size()){
+            if(countRegalados+countBoletos <= bingo.size()){
                 for(int i=0; i < countRegalados; i++){
                     bingoAux.add(Bingo.generarVector(bingo.get(countBoletos+i)));
                 }

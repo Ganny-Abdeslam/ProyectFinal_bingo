@@ -170,8 +170,8 @@ public class Bingo{
                 if (arreglo.get(j).size() > arreglo.get(j+1).size()) {
                     if(arreglo.get(j).size() != 0){
                         ArrayList<String> aux = new ArrayList<>(arreglo.get(j));
-                    arreglo.set(j, arreglo.get(j+1));
-                    arreglo.set(j+1, aux);
+                        arreglo.set(j, arreglo.get(j+1));
+                        arreglo.set(j+1, aux);
                     }
                 }
 
@@ -180,15 +180,19 @@ public class Bingo{
     }
 
     public static int[] obtencionDePosicionesAscendente(ArrayList<ArrayList<String>> bingoVector, ArrayList<ArrayList<String>> arreglo, int[] arregloDatos){
-        int condicion = 0;
+        int condicion = -1;
         boolean banderilla = false;
         for(int x=0; x < arreglo.size(); x++){
             
-            condicion = bingoVector.indexOf(arreglo.get(x));
+            condicion = -1;
+
+            if(arreglo.get(x).size() != 0){
+                condicion = bingoVector.indexOf(arreglo.get(x));
+            }
             
             for(int y=0; y<arregloDatos.length && !banderilla; y++){
             
-                if(condicion != arregloDatos[y] && arregloDatos[y] == -1){
+                if(condicion != arregloDatos[y] && arregloDatos[y] == -1 && condicion != -1){
                     arregloDatos[y] = condicion;
                     banderilla = true;
                 }
