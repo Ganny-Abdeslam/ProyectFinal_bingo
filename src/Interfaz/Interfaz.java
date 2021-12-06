@@ -34,12 +34,12 @@ public class Interfaz extends JFrame implements ActionListener{
     private boolean juego_iniciado = false;
     private boolean juego_finalizado = false;
 
-    private int countI = 0;
-    private int countJ = 0;
-    private int countGanadores = 0;
-    private int[] boletoDeGanadores = {-1, -1, -1};
-    private int countBoletos = 0;
-    private int countRegalados = 0;
+    private int countI = 0; // Contador para recorre la matriz de bolas generadas
+    private int countJ = 0; // Contador para recorre la matriz de bolas generadas
+    private int countGanadores = 0; //Cnatidad de ganadores en tiempo real
+    private int[] boletoDeGanadores = {-1, -1, -1}; // Posiciones de los boletos que han ganado
+    private int countBoletos = 0; // Cantidad de boletos comprados
+    private int countRegalados = 0; // Cantidad de boletos regalados
 
     //private ArrayList<Carton> cartones = new ArrayList<>();
     
@@ -179,14 +179,6 @@ public class Interfaz extends JFrame implements ActionListener{
     }
 
     /**
-     * Obtiene el array de las bolas
-     * @return bolas array de bolas
-     */
-    public ArrayList<String> getArrayBolas(){
-        return bolas;
-    }
-
-    /**
      * Generación de un boton
      * @param mensaje mensaje del boton
      * @param x coordenada en x en la interfaz
@@ -214,7 +206,7 @@ public class Interfaz extends JFrame implements ActionListener{
 
     /**
      * Busca entre las boletas compradas sí ya hay un ganador
-     * @return condicion
+     * @return condicion Variable que contiene true si hay un ganador o false en caso contrario
      */
     public boolean isGanador(){
         boolean condicion = false;
@@ -225,7 +217,9 @@ public class Interfaz extends JFrame implements ActionListener{
             if(condicionInterna){
                 condicion = true;
                 if(countGanadores < boletoDeGanadores.length && !identificarSiExiste(i)){
+                    boletoDeGanadores[countGanadores] = i;
                     identificarBoleto(i);
+                    countGanadores++;
                 }
             }
         }
@@ -233,6 +227,11 @@ public class Interfaz extends JFrame implements ActionListener{
         return condicion;
     }
 
+    /**
+     * Identificar si la posicion existe dentro del vector de boletos ganadores
+     * @param iterador Posicion a buscar
+     * @return condicion Indica si la posicion se encuentra dentro del arreglo con un true, en caso contrario, false
+     */
     private boolean identificarSiExiste(int iterador){
         boolean condicion = false;
         for(int i=0; i<boletoDeGanadores.length && !condicion; i++){
@@ -243,14 +242,17 @@ public class Interfaz extends JFrame implements ActionListener{
         return condicion;
     }
 
+    /**
+     * Identifica si el tablero ganador es regalado o comprado
+     * @param i Posicion del boleto en el arreglo de boletos en juego
+     * Si la posicion ees mayor a la cantidad de boletos comprados, significa que es un tablero comprado
+     */
     public void identificarBoleto(int i){
-        boletoDeGanadores[countGanadores] = i;
-        if(i > countGanadores){
+        if(i > countBoletos){
             JOptionPane.showMessageDialog(null, "Ganador del bingo fue un tablero regalado");
         }else{
             JOptionPane.showMessageDialog(null, "Ganador del bingo fue un tablero comprado");
         }
-        countGanadores++;
     }
 
     /**
@@ -290,11 +292,17 @@ public class Interfaz extends JFrame implements ActionListener{
         }
     }
 
+    /**
+     * Genera una matriz con los vectores de los tableros comprados
+     */
     private void generarBingosComprados(){
         //Bingo Auxiliar para identificar ganadores
         bingoAux.add(Bingo.generarVector(bingo.get(countBoletos)));
     }
 
+    /**
+     * Genera los tableros comprados por los usuarios, dandoles un label propio para imprimirlos en pantalla
+     */
     private void generacionCartonUsuario(){
         Carton carton = new Carton();
         int aux = 0;
@@ -317,6 +325,14 @@ public class Interfaz extends JFrame implements ActionListener{
         countBoletos++;
     }
 
+    /**
+     * Obtiene la posicion de un numero traspuesto de una fila o columna de una matriz
+     * @param aux Numero traspuesto 
+     * @param i
+     * @param j
+     * @param escalar
+     * @return aux
+     */
     public int transponerMatriz(int aux, int i, int j, int escalar){
         if(i<escalar*1){
             aux = j*5;
@@ -333,6 +349,10 @@ public class Interfaz extends JFrame implements ActionListener{
         return aux;
     }
 
+    /**
+     * Genera los tableros de los ganadores que se imprimen en pantalla
+     * @param posicion del tablero ganador
+     */
     public void generarCartonAmostrar(int posicion){
         Carton carton = new Carton();
         String cedula = "";
@@ -358,6 +378,11 @@ public class Interfaz extends JFrame implements ActionListener{
 
     }
 
+    /**
+     * Rellena las posiciones dentro del tablero que se muestra en pantalla con color verde
+     * Esto se realiza cuando se ha sacado una bola que coincide con un numero dentro de una matriz de un tablero
+     * @param carton objeto de tipo carton que tiene un tablero especificado
+     */
     private void rellenarCartonesMostrados(Carton carton){
         for(int i=0; i<countBoletos; i++){
             for(int j=0; j<carton.labelsCarton.size(); j++){
@@ -368,6 +393,9 @@ public class Interfaz extends JFrame implements ActionListener{
         }
     }
 
+    /**
+     * Rellena las posiciones dentro de los tableros comprados por el usuario que se imperimen antes del inicio del juego
+     */
     private void rellenarCartones(){
         for(int i=0; i<countBoletos; i++){
             for(int j=0; j<cartonesUsuarios.get(i).labelsCarton.size(); j++){
@@ -377,7 +405,10 @@ public class Interfaz extends JFrame implements ActionListener{
             }
         }
     }
-    
+
+    /**
+     * Genera los tableros de bingo de los asistentes cuando el usuario indica que va a regalar una cantidad de bingos
+     */
     private void generarBingosAsistentes(){
         if(!texto_tableros_regalar.getText().equals("")){
             if(countRegalados+countBoletos < bingo.size()){

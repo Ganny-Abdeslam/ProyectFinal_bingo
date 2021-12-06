@@ -13,7 +13,7 @@ public class Carton extends JFrame{
     public ArrayList<JLabel> labelsCarton = new ArrayList<>();
 
 	/**
-	 * Inicializa el contenido del frame.
+	 * Constructor que inicializa el contenido del frame de los tableros.
 	 */
 	public void initialize() {
         setLayout(null);
@@ -24,22 +24,31 @@ public class Carton extends JFrame{
         setResizable(false); //No se puede modificar el tamaño de la interfaz
         setVisible(true); //Pinta la interfaz en pantalla
 
-        generarBingo();
+        generarBingo();//Genera los tambleros
 
         for(int i=0; i < 5; i++){
             for(int j=0; j < 5; j++){
-                labelsCarton.add(generarLabel("1", j*30+70, i*30+50, true));
+                labelsCarton.add(generarLabel("1", j*30+70, i*30+50, true)); //Posicion de cada numero del tablero
             }
         }
 
-        labelsCarton.add(generarLabel("", 70, 200, false));
+        //Cedula dentro del frame
+        labelsCarton.add(generarLabel("", 70, 200, false)); //Posicion cedula
         labelsCarton.get(labelsCarton.size()-1).setFont(new Font("Tahoma", Font.PLAIN, 18));
         labelsCarton.get(labelsCarton.size()-1).setBounds(90, 200, 120, 30);
 				
 	}
 
-    public JLabel generarLabel(String mensja, int x, int y, boolean condicion){
-        JLabel label = new JLabel(mensja);
+    /**
+     * Genera los labels de los tableros para su impresion en pantalla como mensaje emergente
+     * @param mensaje Mensjae del label
+     * @param x Posicion en x de la ventana
+     * @param y Posicion en y de la ventana
+     * @param condicion Condicion que identifica si el label es para las letras B I N G O o para los numeros del bingo
+     * @return label la etiqueta o label para mostrar lo especificado en pantalla
+     */
+    public JLabel generarLabel(String mensaje, int x, int y, boolean condicion){
+        JLabel label = new JLabel(mensaje);
         label.setBounds(x, y, 30, 30);
         if(condicion){
             label.setOpaque(true);
@@ -52,6 +61,9 @@ public class Carton extends JFrame{
         return label;
     }
 
+    /**
+     * Genera los labels para las letras B I N G O
+     */
     public void generarBingo(){
         generarLabel("B", 100, 15, false);
         generarLabel("I", 120, 15, false);
