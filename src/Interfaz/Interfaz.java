@@ -298,7 +298,7 @@ public class Interfaz extends JFrame implements ActionListener{
 
         for(int i=0, j=0; i<25; i++, j++){
             
-            aux = transponerMatriz(aux, i, j, 5);
+            aux = transponerMatriz(i, j, 5);
 
             if(j>=4){
                 j = -1;
@@ -310,20 +310,22 @@ public class Interfaz extends JFrame implements ActionListener{
         countBoletos++;
     }
 
-    public int transponerMatriz(int aux, int i, int j, int escalar){
+    public int transponerMatriz(int i, int j, int escalar){
+        int numero = 0;
+
         if(i<escalar*1){
-            aux = j*5;
+            numero = j*5;
         }else if(i<escalar*2){
-            aux = j*5+1;
+            numero = j*5+1;
         }else if(i<escalar*3){
-            aux = j*5+2;
+            numero = j*5+2;
         }else if(i<escalar*4){
-            aux = j*5+3;
+            numero = j*5+3;
         }else if(i<escalar*5){
-            aux = j*5+4;
+            numero = j*5+4;
         }
         
-        return aux;
+        return numero;
     }
 
     public void generarCartonAmostrar(int posicion){
@@ -335,7 +337,7 @@ public class Interfaz extends JFrame implements ActionListener{
 
         for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
-                aux = transponerMatriz(aux, i, j, 1);
+                aux = transponerMatriz(i, j, 1);
                 carton.labelsCarton.get(aux).setText(bingo.get(posicion).get(i).get(j));
             }
         }
